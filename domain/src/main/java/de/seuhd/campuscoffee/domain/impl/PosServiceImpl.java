@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Map;
 
 /**
  * Implementation of the POS service that handles business logic related to POS entities.
@@ -72,7 +73,6 @@ public class PosServiceImpl implements PosService {
         OsmNode osmNode = osmDataService.fetchNode(nodeId);
 
         // Convert OSM node to POS domain object and upsert it
-        // TODO: Implement the actual conversion (the response is currently hard-coded).
         Pos savedPos = upsert(convertOsmNodeToPos(osmNode));
         log.info("Successfully imported POS '{}' from OSM node {}", savedPos.name(), nodeId);
 
@@ -80,24 +80,44 @@ public class PosServiceImpl implements PosService {
     }
 
     /**
-     * Converts an OSM node to a POS domain object.
-     * Note: This is a stub implementation and should be replaced with real mapping logic.
+     * Converts OSM node and its tags to a POS domain object.
+     * Validates that minimum required fields are present, throws otherwise.
      */
     private @NonNull Pos convertOsmNodeToPos(@NonNull OsmNode osmNode) {
-        if (osmNode.nodeId().equals(5589879349L)) {
-            return Pos.builder()
-                    .name("Rada Coffee & Rösterei")
-                    .description("Caffé und Rösterei")
-                    .type(PosType.CAFE)
-                    .campus(CampusType.ALTSTADT)
-                    .street("Untere Straße")
-                    .houseNumber("21")
-                    .postalCode(69117)
-                    .city("Heidelberg")
-                    .build();
-        } else {
-            throw new OsmNodeMissingFieldsException(osmNode.nodeId());
-        }
+        Map<String, String> tags = osmNode.tags();
+
+        // Required fields - check presence or throw
+        String name = tags.getOrDefault("name", tags.get("name:en"));
+        if (name == null) throw new OsmNodeMissingFieldsException(osmNode.nodeId());
+
+        String description = tags.getOrDefault("description", "");
+        String street = tags.getOrDefault("addr:street", null);
+        String houseNumber = tags.getOrDefault("addr:housenumber", null);
+        Integer postalCode = null;
+        try {
+            postalCode = tags.get("addr:postcode") != null ? Integer.parseInt(tags.get("addr:postcode")) : null;
+        } catch (NumberFormatException ignored) {}
+
+        String city = tags.getOrDefault("addr:city", null);
+
+        // Determine type/kind (simple mapping, can be extended)
+        String amenity = tags.get("amenity");
+        PosType type = PosType.CAFE; // Default; you could map "restaurant" etc. as needed
+
+        // For campus mapping, as demo, assign based on city or geo-coordinates (extend later!)
+        CampusType campus = "Heidelberg".equalsIgnoreCase(city) ? CampusType.ALTSTADT : CampusType.UNKNOWN;
+
+        // Build POS domain object
+        return Pos.builder()
+                .name(name)
+                .description(description)
+                .type(type)
+                .campus(campus)
+                .street(street)
+                .houseNumber(houseNumber)
+                .postalCode(postalCode != null ? postalCode : 0)
+                .city(city != null ? city : "")
+                .build();
     }
 
     /**
