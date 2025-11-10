@@ -1,0 +1,24 @@
+<osm version="0.6" generator="openstreetmap-cgimap 2.1.0 (3893102 spike-07.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+    <node id="5589879349" visible="true" version="11" changeset="165984125" timestamp="2025-05-08T13:35:07Z" user="Niiepce" uid="12992079" lat="49.4122362" lon="8.7077883">
+        <tag k="addr:city" v="Heidelberg"/>
+        <tag k="addr:country" v="DE"/>
+        <tag k="addr:housenumber" v="21"/>
+        <tag k="addr:postcode" v="69117"/>
+        <tag k="addr:street" v="Untere Straße"/>
+        <tag k="amenity" v="cafe"/>
+        <tag k="cuisine" v="coffee_shop;breakfast"/>
+        <tag k="description" v="Caffé und Rösterei"/>
+        <tag k="diet:vegan" v="yes"/>
+        <tag k="diet:vegetarian" v="yes"/>
+        <tag k="indoor_seating" v="yes"/>
+        <tag k="internet_access:fee" v="no"/>
+        <tag k="name" v="Rada"/>
+        <tag k="name:de" v="Rada Coffee & Rösterei"/>
+        <tag k="name:en" v="Rada Coffee & Rösterei"/>
+        <tag k="opening_hours" v="Mo-Fr 11:00-18:00; Sa-Su 10:00-18:00"/>
+        <tag k="outdoor_seating" v="yes"/>
+        <tag k="phone" v="+49 6221 1805585"/>
+        <tag k="smoking" v="outside"/>
+        <tag k="website" v="https://rada-roesterei.com/"/>
+    </node>
+</osm>
